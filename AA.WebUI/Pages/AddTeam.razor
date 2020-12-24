@@ -1,0 +1,34 @@
+﻿@using AA.Entities.Concrete.Mongo
+@inject AA.Business.Abstract.ITeamService TeamManager
+
+<EditForm Model="@teamModel" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <InputText id="name" class="form-control" @bind-Value="teamModel.Name" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Nation</label>
+        <InputText id="nation" class="form-control" @bind-Value="teamModel.Nation" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Founded</label>
+        <InputNumber id="founded" class="form-control" @bind-Value="teamModel.Founded" />
+    </div>
+
+    <button class="btn btn-success" type="submit">Save Team</button>
+</EditForm>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    private Team teamModel = new Team();
+
+    async Task HandleValidSubmit()
+    {
+        TeamManager.AddTeam(teamModel);
+        await ModalInstance.Close(ModalResult.Ok("Team added"));
+    }
+}
